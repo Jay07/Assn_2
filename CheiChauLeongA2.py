@@ -1,3 +1,9 @@
+'''
+Name: Leong Chei Chau
+Date: 30/05/2016
+Program Details: A kivy app that reads and write from a csv file and allows people to hire items, return items and add new items for hire.
+GitHub Link: https://github.com/Jay07/Assn_2
+'''
 from kivy.app import App
 from kivy.lang import Builder
 from kivy.uix.button import Button,ButtonBehavior

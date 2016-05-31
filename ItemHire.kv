@@ -1,0 +1,37 @@
+BoxLayout:
+    orientation:"vertical"
+    BoxLayout:
+        BoxLayout:
+            orientation:"vertical"
+            size_hint_x:None
+            width:200
+            ToggleButton:
+                id:list
+                text:"List Item"
+                group:"action"
+                state:"down"
+                on_press:app.ShowLabel()
+            ToggleButton:
+                id:hire
+                text:"Hire Item"
+                group:"action"
+                on_press:app.ShowLabel()
+            ToggleButton:
+                id:ret
+                text:"Return Item"
+                group:"action"
+                on_press:app.ShowLabel()
+            Button:
+                text:"Confirm"
+                on_release:app.ConfirmButton()
+            Button:
+                id:add
+                text:"Add New item"
+                on_release:app.AddItem()
+        GridLayout:
+            cols:2
+            id:item
+    Label:
+        text:"Choose action from the left menu, then select items on the right"
+        size_hint_y:None
+        id:label
