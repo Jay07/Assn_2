@@ -36,9 +36,9 @@ class ItemHire(App):
             for Data in Detail:
                 ItemDetailsList.append(Data) # append each individual item detail to list
             if Detail[3] == "in":
-                ButtonColor = [0, 0, 1, 1] # set button color
-            else:
                 ButtonColor = [0, 1, 0, 1] # set button color
+            else:
+                ButtonColor = [0, 0, 1, 1] # set button color
             self.ItemDict[Detail[0]]=Button(text=Detail[0], background_color=ButtonColor) # create button
             self.ItemDict[Detail[0]].bind(on_press=lambda a:self.ItemState()) # bind function to button
             self.root.ids.item.add_widget(self.ItemDict[Detail[0]]) # add button to GUI
@@ -54,7 +54,7 @@ class ItemHire(App):
                 self.ItemNameList.append(Details[0]) # append item name to name list
             for Name in self.ItemNameList:
                 if self.ItemDict[Name].background_color == [1, 0, 1, 1]:  # change button color
-                    self.ItemDict[Name].background_color = [0, 0, 1, 1]
+                    self.ItemDict[Name].background_color = [0, 1, 0, 1]
         elif self.root.ids.hire.state == "down": # hire items is selected
             self.root.ids.label.text = "Select available items to hire"
         elif self.root.ids.ret.state == "down": # return items is selected
@@ -78,10 +78,10 @@ class ItemHire(App):
             self.ItemNameList.append(Detail[0]) # append name to name list
         i=0 # counter for each individual detail
         for Name in self.ItemNameList: # loop for each item
-            a=i # item name
-            b=i+1 # item description
-            c=i+2 # item cost
-            d=i+3 # item availability
+            a = i # item name
+            b = i + 1 # item description
+            c = i + 2 # item cost
+            d = i + 3 # item availability
             if self.ItemDict[Name].state=="down": # item button is selected and is in list
                 self.root.ids.label.text="{} ({}), ${:.2f} is {}".format(ItemDetailsList[a],ItemDetailsList[b],float(ItemDetailsList[c]),ItemDetailsList[d])
                 break
@@ -96,21 +96,21 @@ class ItemHire(App):
             Detail = Object.split(',')
             self.ItemNameList.append(Detail[0]) # append name to name list
             self.HireItemDict[Detail[0]] = Detail[2] # enter item name and item cost into dictionary
-        InitialPrice=0.0 # set initial price
-        HireItemName="" # set output string
-        record="" # set selected items
+        InitialPrice = 0.0 # set initial price
+        HireItemName = "" # set output string
+        SelectedItems = "" # set selected items
         for Name in self.ItemNameList: # loop for each item
             if self.ItemDict[Name].state=="down": # item is selected for hire
-                if self.ItemDict[Name].background_color==[0, 0, 1, 1]: # item available for hire
+                if self.ItemDict[Name].background_color==[0, 1, 0, 1]: # item available for hire
                     for Item in self.ItemNameList: # loop for each item available for hire
                         if self.ItemDict[Item].background_color==[1,0,1,1]: # select item to hire
-                            if record == "":
-                                record += Item # check if items are selected
-                            else:
-                                record += ',' + Item
-                    if record!="":
+                            if SelectedItems == "": # first item selected
+                                SelectedItems += Item
+                            else: # subsequent items selected
+                                SelectedItems += ',' + Item
+                    if SelectedItems != "": # multiple items selected
                         self.ItemDict[Name].background_color = [1, 0, 1, 1] # change button color
-                        data=record.split(',')
+                        data = SelectedItems.split(',')
                         for element in data:
                             if HireItemName=="": # first item selected
                                 HireItemName+=self.ItemDict[element].text # add price of items
@@ -121,21 +121,21 @@ class ItemHire(App):
                         InitialPrice += float(self.HireItemDict[self.ItemDict[Name].text]) # add price of items
                         HireItemName += "," + self.ItemDict[Name].text # generate output string
                         self.root.ids.label.text="Hiring:{} for ${:.2f}".format(HireItemName,InitialPrice)
-                    elif record=="":
+                    elif SelectedItems == "":
                         self.ItemDict[Name].background_color = [1, 0, 1, 1]
                         InitialPrice += float(self.HireItemDict[self.ItemDict[Name].text]) # add price of items
                         HireItemName += self.ItemDict[Name].text # generate output string
                         self.root.ids.label.text = "Hiring:{} for ${:.2f}".format(HireItemName, float(InitialPrice))
 
-                elif self.ItemDict[Name].background_color==[1,0,1,1]: # confirming to hire selected items
-                    self.ItemDict[Name].background_color=[0,0,1,1] # change button color
+                elif self.ItemDict[Name].background_color==[1, 0, 1, 1]: # confirming to hire selected items
+                    self.ItemDict[Name].background_color=[0, 1, 0, 1] # change button color
                     for Name in self.ItemNameList:
                         if self.ItemDict[Name].background_color == [1, 0, 1, 1]: # item has been selected for hire
                             InitialPrice += float(self.HireItemDict[self.ItemDict[Name].text]) # add price of items
                             HireItemName += self.ItemDict[Name].text # generate output string
                             self.root.ids.label.text = "Hiring:{} for ${:.2f}".format(HireItemName, float(InitialPrice))
 
-                elif self.ItemDict[Name].background_color == [0, 1, 0, 1]:  # item not available for hired
+                elif self.ItemDict[Name].background_color == [0, 0, 1, 1]:  # item not available for hired
                     self.root.ids.label.text = "Hiring: no items for {:.2f}".format(InitialPrice)
 
 
@@ -147,19 +147,19 @@ class ItemHire(App):
             Detail = Object.split(',')
             self.ItemNameList.append(Detail[0]) # append name to name list
         ReturnItemName = "" # set output string
-        record = "" # set selected items
+        SelectedItems = "" # set selected items
         for Name in self.ItemNameList: # loop for each item
             if self.ItemDict[Name].state == "down": # item is selected for return
-                if self.ItemDict[Name].background_color == [0, 1, 0, 1]: # item is available for return
+                if self.ItemDict[Name].background_color == [0, 0, 1, 1]: # item is available for return
                     for Item in self.ItemNameList: # loop for each item available to return
                         if self.ItemDict[Item].background_color == [1, 0, 1, 1]: # select item to return
-                            if record == "":
-                                record += Item # check if items are selected
-                            else:
-                                record += ',' + Item
-                    if record != "":
+                            if SelectedItems == "": # first item selected
+                                SelectedItems += Item
+                            else: # subsequent items selected
+                                SelectedItems += ',' + Item
+                    if SelectedItems != "": # multiple items selected
                         self.ItemDict[Name].background_color = [1, 0, 1, 1] # change button color
-                        data = record.split(',')
+                        data = SelectedItems.split(',')
                         for element in data:
                             if ReturnItemName == "": # first item selected
                                 ReturnItemName += self.ItemDict[element].text # generate output string
@@ -167,19 +167,19 @@ class ItemHire(App):
                                 ReturnItemName +=  "," + self.ItemDict[element].text # generate output string
                         ReturnItemName += "," + self.ItemDict[Name].text # generate output string
                         self.root.ids.label.text = "Returning:{}".format(ReturnItemName)
-                    elif record == "":
+                    elif SelectedItems == "":
                         self.ItemDict[Name].background_color = [1, 0, 1, 1] # change button color
                         ReturnItemName += self.ItemDict[Name].text # generate output string
                         self.root.ids.label.text = "Returning:{}".format(ReturnItemName)
 
                 elif self.ItemDict[Name].background_color == [1, 0, 1, 1]: # confirming to return selected items
-                    self.ItemDict[Name].background_color = [0, 1, 0, 1] # change button color
+                    self.ItemDict[Name].background_color = [0, 0, 1, 1] # change button color
                     for Name in self.ItemNameList:
                         if self.ItemDict[Name].background_color == [1, 0, 1, 1]: # item has been selected for return
                             ReturnItemName += self.ItemDict[Name].text # generate output string
                             self.root.ids.label.text = "Returning:{}".format(ReturnItemName)
 
-                elif self.ItemDict[Name].background_color == [0, 0, 1, 1]:  # item is already on hired
+                elif self.ItemDict[Name].background_color == [0, 1, 0, 1]:  # item is already on hired
                     self.root.ids.label.text = "Returning: no items on hire"
 
 
@@ -194,7 +194,7 @@ class ItemHire(App):
             i = 3
             for Name in self.ItemNameList:
                 if self.ItemDict[Name].background_color == [1, 0, 1, 1]: # item is selected for hire
-                    self.ItemDict[Name].background_color = [0, 1, 0, 1] # change color to show item is on hire
+                    self.ItemDict[Name].background_color = [0, 0, 1, 1] # change color to show item is on hire
                     ItemDetailsList[i]="out" # change item availability
                 i += 4 # check next item
 
@@ -209,7 +209,7 @@ class ItemHire(App):
             i = 3
             for Name in self.ItemNameList:
                 if self.ItemDict[Name].background_color == [1, 0, 1, 1]: # item is selected for return
-                    self.ItemDict[Name].background_color = [0, 0, 1, 1] # change color to show item is not on hire
+                    self.ItemDict[Name].background_color = [0, 1, 0, 1] # change color to show item is not on hire
                     ItemDetailsList[i] = "in" # change item availability
                 i += 4 # check next item
 
@@ -255,7 +255,7 @@ class ItemHire(App):
                 if float(item['AddItemCost'].text) < 0:  # if item cost is negative
                     item['label'].text = "Price must not be negative"
                 else: # item is valid
-                    self.ItemDict[item['AddItemName'].text] = Button(text=item['AddItemName'].text, background_color=[0, 0, 1, 1]) # create button for new item
+                    self.ItemDict[item['AddItemName'].text] = Button(text=item['AddItemName'].text, background_color=[0, 1, 0, 1]) # create button for new item
                     self.ItemDict[item['AddItemName'].text].bind(on_press=lambda a: self.ItemState()) # bind function to new button
                     self.root.ids.item.add_widget(self.ItemDict[item['AddItemName'].text]) # add new button to GUI
                     AddItemAvailability = 'in' # set item availability
